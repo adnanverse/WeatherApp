@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather App </title>
+    <style>
+        * {
+            padding: 0px;
+            margin: 0px;
+            box-sizing: border-box;
+            font-family: sans-serif;
+        }
+
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #9CCDD2;
+            flex-direction: column;
+        }
+
+        .city {
+            border: none;
+            outline: none;
+            border-radius: 5px;
+            padding: 0px 10px;
+        }
+
+        .city+button {
+            border: none;
+            background-color: white;
+            margin-right: 5px;
+        }
+
+        .search {
+            border: 2px solid black;
+            border-radius: 10px;
+            padding : 0px 5px;
+            background-color: white;
+            margin: 20px 40px 30px 40px;
+
+        }
+
+        .main {
+            background-color: #C3E1E4;
+            border-radius: 20px;
+            transition: 0.5s;
+            box-shadow: 5px 5px 2px 3px #0E2954;
+        }
+
+        h2 {
+            padding-bottom: 15px;
+        }
+
+        .pop {
+            position: relative;
+            /* transform: scaleY(0); */
+            display: none;
+            padding-top: 40px;
+            transition: 0.5s;
+        }
+        .invalid{
+            text-align: center  ;
+            transition: 0.5s;
+            padding-bottom: 15px;
+            /* transform: scaleY(0) */
+            display: none;
+        }
+        .display{
+            /* transform: scaleY(1) !important; */
+            display: block;
+        }
+        .wh{
+            display: flex;
+            justify-content: space-between;
+            padding: 15px;
+        }
+        input{
+            outline: none;
+            border: none;
+        }
+        .temp{
+            text-align: center;
+        }
+        .city{
+            text-align: center;
+        }
+        .weather{
+            position: absolute;
+            top: -40px;
+            width: 100px;
+            height: 50px;
+            left: 50%;
+            /* background-color: RED; */
+            transform: translateX(-50%)
+        }
+        button{
+            background-color: white;
+            outline: none;
+            border: none;
+    }
+
+    </style>
+</head>
+
+<body>
+    <h2>Weather App</h2>
+    <div class="main">
+        <div class="search">
+            <form action="">
+                <input type="search" id="serach" name="city" class="cityname">
+                <button><i class="fa-solid fa-magnifying-glass"></i></button>
+            </form>
+        </div>
+        <div class="invalid" >
+            <h3>INVALID</h3>
+        </div>
+
+        <div class="pop">
+            <div class="weather">
+            
+                    <img src="" width="100%" id="img" alt="">
+                
+            </div>
+            <div class="temp" id="temp"><h1>44</h1></div>
+            <div class="city"><h3>jodhpur</h3></div>
+            <div class="wh">
+                <div class="wind">
+                   <h3> wind now</h3>
+                   <span id="wind"></span>
+                </div>
+                <div class="humidity">
+                  <h3>  humidity</h3>
+                  <span id="humidity"></span>
+                </div>
+            </div>
+            
+
+
+
+        </div>
+    </div>
+</body>
+<script>
+
+    form = document.querySelector('form').addEventListener('submit', async (event) => {
+        event.preventDefault();
+        cityName = event.target.city.value; 
+        // console.log(cityName)
+       let fetchdata = await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${cityName}&appid=4d8fb5b93d4af21d66a2948710284366&units=metric`)
+       let finalres = await fetchdata.json();
+       
+       console.log(finalres)
+       if(finalres.message=='city not found'){
+        invalid= document.querySelector('.invalid').classList.add('display')
+
+         document.querySelector('.pop').style.display= 'none'
+      
+        
+       }
+       else{
+        document.querySelector('img').src= `https://openweathermap.org/img/wn/${finalres.weather[0].icon}@2x.png`
+        document.querySelector('.pop').style.display='block'
+        document.querySelector('.city').innerText = finalres.name
+            document.querySelector('.temp').innerText =finalres.main.temp;
+            document.querySelector('#wind').innerText=finalres.wind.speed;
+            document.getElementById('humidity').innerText = finalres.main.humidity
+            invalid= document.querySelector('.invalid').classList.remove('display')
+            console.log(finalres.weather.icon)
+        }
+ 
+
+        });
+
+
+
+
+</script>
+
+</html>
